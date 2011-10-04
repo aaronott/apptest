@@ -1,0 +1,23 @@
+This is a Drupal installation profile that I use in order to bring up a dev
+environment very quickly. My purpose for using it is for new project
+applications.
+
+It includes a pretty standard installation profile with the addition of the
+following:
+- coder
+- security_review
+- devel
+
+I borrowed quite a bit from the Aten Development Base profile
+(http://drupal.org/project/aten_dev_base)
+
+and added a build script for ease of use.
+
+usage:
+open the ./build script and change the configurations for the database (user,
+pass,host,name)
+from the commandline: ./build <target to build>
+example: ./build /var/www/apptest
+
+You may need sudo to run this as it does a couple chmod commands that require
+it.

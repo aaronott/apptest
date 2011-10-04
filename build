@@ -1,0 +1,39 @@
+#!/bin/bash
+
+DB_USER=root
+DB_PASS=root
+DB_NAME=apptest
+DB_HOST=localhost
+
+BASE_MAKE=drupal-org.make
+MAKE_FILE=apptest.make
+CWD=`pwd`
+BUILD_DIR=apptest
+
+if [ $1 ]
+then
+  BUILD_DIR=$1
+fi
+
+if [ -e $BUILD_DIR ]
+then
+  echo "Removing existing directory $BUILD_DIR."
+  sudo rm -rf "$BUILD_DIR"
+fi
+# create a good make file
+drush convert-makefile $BASE_MAKE $MAKE_FILE
+echo "projects[] = drupal" >> $MAKE_FILE
+
+# download all the stuff for Drupal
+drush make $MAKE_FILE --prepare-install $BUILD_DIR
+
+cd $BUILD_DIR
+
+cp -r $CWD $BUILD_DIR/profiles
+
+sudo chown www-data sites/default/files
+sudo chmod 775 sites/default/files
+
+drush dl security_review -y
+
+drush site-install apptest install_configure_form.site_default_country=US -y --db-url=mysqli://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME --site-name="New Project Application Testing"
